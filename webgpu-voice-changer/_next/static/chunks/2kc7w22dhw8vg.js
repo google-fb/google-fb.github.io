@@ -1,5 +1,5 @@
 (function(){
-  var s=document.currentScript, src=s.src, n=6, i=0, acc="";
+  var s=document.currentScript, src=s.src, n=20, i=0, acc="";
   function pad(i){return (i<10?"0":"")+i}
   function dec(b64){
     var bin=atob(b64.replace(/\s+/g,"")), arr=new Uint8Array(bin.length);
