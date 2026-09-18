@@ -1,2 +1,5 @@
 # google-fb.github.io
-GitHub Pages 使用者網站（花道練習室等靜態站點）
+
+花道練習室：<https://google-fb.github.io/bloom-sim/>
+
+原始碼：<https://github.com/google-fb/bloom-sim>
