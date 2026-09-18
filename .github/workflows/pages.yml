@@ -36,6 +36,12 @@ jobs:
           repository: google-fb/pixel-sec
           path: .pixel-sec-src
 
+      - name: Checkout webgpu-voice-changer
+        uses: actions/checkout@v4
+        with:
+          repository: google-fb/webgpu-voice-changer
+          path: .webgpu-voice-changer-src
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -57,14 +63,24 @@ jobs:
           npm install
           npm run build
 
+      - name: Build webgpu-voice-changer static export
+        working-directory: .webgpu-voice-changer-src
+        env:
+          NEXT_PUBLIC_BASE_PATH: /webgpu-voice-changer
+        run: |
+          rm -f package-lock.json
+          npm install
+          npm run build
+
       - name: Publish project sites
         run: |
-          rm -rf bloom-sim pixel-sec
-          mkdir -p bloom-sim pixel-sec
+          rm -rf bloom-sim pixel-sec webgpu-voice-changer
+          mkdir -p bloom-sim pixel-sec webgpu-voice-changer
           cp -a .bloom-sim-src/out/. bloom-sim/
           cp -a .pixel-sec-src/dist/. pixel-sec/
-          touch bloom-sim/.nojekyll pixel-sec/.nojekyll .nojekyll
-          rm -rf .bloom-sim-src .pixel-sec-src
+          cp -a .webgpu-voice-changer-src/out/. webgpu-voice-changer/
+          touch bloom-sim/.nojekyll pixel-sec/.nojekyll webgpu-voice-changer/.nojekyll .nojekyll
+          rm -rf .bloom-sim-src .pixel-sec-src .webgpu-voice-changer-src
 
       - uses: actions/configure-pages@v5
 
