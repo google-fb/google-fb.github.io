@@ -7,7 +7,13 @@
     return new TextDecoder("utf-8").decode(arr);
   }
   function next(){
-    if(i>=n){var e=document.createElement("script");e.text=acc;s.parentNode.insertBefore(e,s.nextSibling);return}
+    if(i>=n){
+      acc=acc.replace(/"object"==typeof document\?document\.currentScript:void 0/g,"({src:"+JSON.stringify(src)+"})");
+      var e=document.createElement("script");
+      e.text=acc;
+      s.parentNode.insertBefore(e,s.nextSibling);
+      return;
+    }
     fetch(src+".b64."+pad(i++)).then(function(r){if(!r.ok)throw new Error(r.status);return r.text()}).then(function(t){acc+=dec(t);next()});
   }
   next();
