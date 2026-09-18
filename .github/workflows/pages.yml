@@ -21,10 +21,40 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout user site
+        uses: actions/checkout@v4
+
+      - name: Checkout bloom-sim
+        uses: actions/checkout@v4
+        with:
+          repository: google-fb/bloom-sim
+          path: .bloom-sim-src
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build bloom-sim static export
+        working-directory: .bloom-sim-src
+        env:
+          NEXT_PUBLIC_BASE_PATH: /bloom-sim
+        run: |
+          npm install
+          npm run build
+
+      - name: Publish bloom-sim under /bloom-sim/
+        run: |
+          rm -rf bloom-sim
+          mkdir -p bloom-sim
+          cp -a .bloom-sim-src/out/. bloom-sim/
+          touch bloom-sim/.nojekyll .nojekyll
+          rm -rf .bloom-sim-src
+
       - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
+
       - id: deployment
         uses: actions/deploy-pages@v4
