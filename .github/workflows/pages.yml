@@ -30,6 +30,12 @@ jobs:
           repository: google-fb/bloom-sim
           path: .bloom-sim-src
 
+      - name: Checkout pixel-sec
+        uses: actions/checkout@v4
+        with:
+          repository: google-fb/pixel-sec
+          path: .pixel-sec-src
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -42,13 +48,23 @@ jobs:
           npm install
           npm run build
 
-      - name: Publish bloom-sim under /bloom-sim/
+      - name: Build pixel-sec
+        working-directory: .pixel-sec-src
+        env:
+          GITHUB_PAGES: 'true'
         run: |
-          rm -rf bloom-sim
-          mkdir -p bloom-sim
+          rm -f package-lock.json
+          npm install
+          npm run build
+
+      - name: Publish project sites
+        run: |
+          rm -rf bloom-sim pixel-sec
+          mkdir -p bloom-sim pixel-sec
           cp -a .bloom-sim-src/out/. bloom-sim/
-          touch bloom-sim/.nojekyll .nojekyll
-          rm -rf .bloom-sim-src
+          cp -a .pixel-sec-src/dist/. pixel-sec/
+          touch bloom-sim/.nojekyll pixel-sec/.nojekyll .nojekyll
+          rm -rf .bloom-sim-src .pixel-sec-src
 
       - uses: actions/configure-pages@v5
 
